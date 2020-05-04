@@ -20,3 +20,4 @@ KEY BINDING:
     a few others for payload drop and supply drop and reset see code for key binding
   
     
+dynamic resolution not enabled default resolution of 1920x1080 is enabled and configured for this will be solved in the future updates after the main functionalities are working fine
