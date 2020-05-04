@@ -1,7 +1,7 @@
 # Ground_Station
 code and cad for a fully portable dedicated groundstation
 
-# USE test branch for all the pull requests and test files
+# use 'test' branch for all the pull requests and test files
 
 currently sscreentest.py is the main file
 
