@@ -11,3 +11,10 @@ under development requires testing and added features to become fully functional
 
 branch the project and push any working changes with documentation
 
+KEY BINDING:
+    F1  : toggle fullscreen
+    Esc : exit fullscreen
+    Q(multiple presses)   : quit program
+    a few others for payload drop and supply drop and reset see code for key binding
+  
+    
