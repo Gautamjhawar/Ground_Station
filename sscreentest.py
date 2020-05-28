@@ -10,7 +10,15 @@ import numpy as np
 import PIL
 from PIL import Image,ImageTk
 import pytesseract
+import win32api
+import ctypes
 
+user32 = ctypes.windll.user32
+
+win_height=user32.GetSystemMetrics(1)
+win_width=user32.GetSystemMetrics(0)
+win_height_geo=0.926*win_height
+print(win_height,win_width)
 width, height = 1280, 720
 
 alt="15.69";
@@ -20,12 +28,14 @@ textsize="Times 70 bold"
 textsize2="Times 20 bold"
     
 sroot = Tk()
-sroot.minsize(height=1090,width=1920)
+sroot.minsize(height=500,width=500)
 sroot.title("Splash window")
+sroot.geometry('%dx%d+%d+%d' % (1746, 696,(win_width/2-1746/2), (win_height/2-696/2)))
+sroot.overrideredirect(2)
 sroot.configure()
-spath = "splash.png"
+spath = "splash600X300.png"
 simg = ImageTk.PhotoImage(Image.open(spath))
-my = Label(sroot,image=simg)
+my = Label(sroot,image=simg,bg='black',highlightbackground="black",highlightthickness=1)
 my.image = simg
 my.place(x=0,y=0)
 Frame(sroot,height=516,width=5,bg='black').place(x=520,y=0)
@@ -35,11 +45,11 @@ Frame(sroot,height=516,width=5,bg='black').place(x=520,y=0)
 def call_mainroot():
     sroot.destroy()
     mainloopp()
-sb=Button(sroot,text="Start Session",command=call_mainroot).pack()
+#sb=Button(sroot,text="Start Session",command=call_mainroot).pack()
 
 
-
-
+f=cv2.VideoWriter_fourcc(*'MJPG')
+out = cv2.VideoWriter('test.avi',f, 14, (1280,720))
 
 
 def mainloopp():
@@ -73,6 +83,7 @@ def mainloopp():
             self.tk.attributes("-fullscreen", False)
             return "break"
         def exit_program(self,event=None):
+            out.release()
             self.tk.quit()
         
         
@@ -117,7 +128,8 @@ def mainloopp():
             cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
             videocap()
            
-    cap = cv2.VideoCapture(valkeeper.camval)
+    cap = cv2.VideoCapture(valkeeper.camval + cv2.CAP_DSHOW)
+    
     def updateLable():
         if valkeeper.comtrue==True:
             cpnv=valkeeper.comval
@@ -144,10 +156,13 @@ def mainloopp():
         
     def videocap():
         _, frame = cap.read()
+       # print(valkeeper.camval)
         frame = cv2.flip(frame, 1)
-        frame=cv2.line(frame, (640,350), (640,370), (0,255,0),2)
-        frame=cv2.line(frame, (630,360), (650,360), (0,255,0),2)
+        frame=cv2.line(frame, (640,350), (640,370), (0,255,0),1)                     #nice center crosshair = (640,350), (640,370)
+        frame=cv2.line(frame, (630,360), (650,360), (0,255,0),1)                     #nice center crosshair = (630,360), (650,360)
+        
         cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+        out.write(frame)
         img = PIL.Image.fromarray(cv2image)
         imgtk = ImageTk.PhotoImage(image=img)
         midframe1.imgtk = imgtk
@@ -157,7 +172,8 @@ def mainloopp():
 
     if __name__ == '__main__':
         w = Fullscreen_Window()
-        w.tk.geometry('1920x1000')
+        w.toggle_fullscreen()
+        w.tk.geometry('1920x1000+0+0')
         w.tk.title("Assailing Falcon's Ground Station")
         w.tk.iconbitmap('icon1.ico')
         w.tk.configure(bg='black')
@@ -241,7 +257,7 @@ def mainloopp():
         midframe.add(midframe1,width=1280,height=720)
         midframe.add(midframerigth,width=310,height=720)
         startround=Button(midframeleft,text="Start Round Data recording",padx=2,pady=3,bg="green").pack()
-        brec=Button(midframerigth,text="Record Video ",padx=2,pady=3,bg='Green').pack()
+        #brec=Button(midframerigth,text="Record Video ",padx=2,pady=3,bg='Green').pack()
 
         
         #-------------------------------bottom frame---------------------------------
@@ -259,10 +275,10 @@ def mainloopp():
         
         #-----------------------------------main loop----------------------------------
         w.tk.mainloop()
-#def call_mainroot():
- #   sroot.destroy()
-  #  mainloopp()
+def call_mainroot():
+    sroot.destroy()
+    mainloopp()
 
-#sroot.after(1500,call_mainroot)         #TimeOfSplashScreen
+sroot.after(2500,call_mainroot)         #TimeOfSplashScreen
 
 sroot.mainloop()
